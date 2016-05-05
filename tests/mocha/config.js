@@ -1,10 +1,11 @@
 var baseURL = 'http://wwwint.ebi.ac.uk/eva';
-//var baseURL = 'http://localhost/eva-web/build/1.0.0/index.html';
+// var baseURL = 'http://localhost/eva-web/build/1.0.0/index.html';
 //var baseURL = 'http://localhost/eva-web/src/index.html';
 var browser = process.env.BROWSER;
 
 module.exports = {
     initDriver: function (driverName) {
+        require('chromedriver').path;
         driver = new webdriver.Builder()
             .forBrowser(driverName)
             .build();

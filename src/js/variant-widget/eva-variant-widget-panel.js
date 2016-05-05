@@ -88,11 +88,11 @@ EvaVariantWidgetPanel.prototype = {
         if (_this.panel.isVisible()) {
             value = value || 0;
             if (value) {
-                _this.panel.doLayout();
+                _this.panel.updateLayout();
             }
-            _this.variantWidget.variantBrowserGrid.panel.doLayout();
-            _this.variantWidget.toolTabPanel.doLayout();
-            _this.formPanelVariantFilter.panel.doLayout();
+            _this.variantWidget.variantBrowserGrid.panel.updateLayout();
+            _this.variantWidget.toolTabPanel.updateLayout();
+            _this.formPanelVariantFilter.panel.updateLayout();
             var row = _this.variantWidget.variantBrowserGrid.grid.getSelectionModel().getSelection();
             if (_this.variantWidget.toolTabPanel.getActiveTab().title == 'Genomic Context') {
                 _this.variantWidget.resizeGV();
@@ -243,7 +243,7 @@ EvaVariantWidgetPanel.prototype = {
             collapsed: false,
             height: 790,
             studiesStore: this.studiesStore,
-            studyFilterTpl: '<tpl if="studyId"><div class="ocb-study-filter"><a href="?eva-study={studyId}" target="_blank">{studyName}</a> (<a href="?eva-study={studyId}" target="_blank">{studyId}</a>) </div><tpl else><div class="ocb-study-filter"><a href="?eva-study={studyId}" target="_blank">{studyName}</a></div></tpl>'
+            studyFilterTpl: '<tpl if="studyId"><div class="ocb-study-filter"><tpl if="link"><a href="?eva-study={studyId}" target="_blank">{studyName}</a> (<a href="?eva-study={studyId}" target="_blank">{studyId}</a>)<tpl else>{studyName} ({studyId}) </tpl></div><tpl else><div class="ocb-study-filter"><a href="?eva-study={studyId}" target="_blank">{studyName}</a></div></tpl>'
         });
 
         speciesFilter.on('species:change', function (e) {
@@ -436,12 +436,12 @@ EvaVariantWidgetPanel.prototype = {
 //                            ensemblURL = 'http://grch37.ensembl.org/' + ensemblSepciesName + '/Variation/Explore?vdb=variation;v={id}';
 //                        }
                         var ncbiURL = 'http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?rs={id}';
-                        updateTpl = Ext.create('Ext.XTemplate', '<tpl if="id"><a href="?variant={chromosome}:{start}:{reference}:{alternate}&species=' + e.values.species + '" target="_blank"><img class="eva-grid-img-active" src="img/eva_logo.png"/></a>' +
+                        updateTpl = Ext.create('Ext.XTemplate', '<tpl if="id"><a href="?variant={chromosome}:{start}:{reference:htmlEncode}:{alternate:htmlEncode}&species=' + e.values.species + '" target="_blank"><img class="eva-grid-img-active" src="img/eva_logo.png"/></a>' +
 //                            '<a href="' + ensemblURL + '" target="_blank"><img alt="" src="http://static.ensembl.org/i/search/ensembl.gif"></a>' +
                             '&nbsp;<a href="' + ncbiURL + '" target="_blank"><span>dbSNP</span></a>' +
-                            '<tpl else><a href="?variant={chromosome}:{start}:{reference}:{alternate}&species=' + e.values.species + '" target="_blank"><img class="eva-grid-img-active" src="img/eva_logo.png"/></a>&nbsp;<span  style="opacity:0.2" class="eva-grid-img-inactive ">dbSNP</span></tpl>');
+                            '<tpl else><a href="?variant={chromosome}:{start}:{reference:htmlEncode}:{alternate:htmlEncode}&species=' + e.values.species + '" target="_blank"><img class="eva-grid-img-active" src="img/eva_logo.png"/></a>&nbsp;<span  style="opacity:0.2" class="eva-grid-img-inactive ">dbSNP</span></tpl>');
                     } else {
-                        updateTpl = Ext.create('Ext.XTemplate', '<tpl><a href="?variant={chromosome}:{start}:{reference}:{alternate}&species=' + e.values.species + '" target="_blank"><img class="eva-grid-img-active" src="img/eva_logo.png"/></a>&nbsp;<span  style="opacity:0.2" class="eva-grid-img-inactive ">dbSNP</span></tpl>');
+                        updateTpl = Ext.create('Ext.XTemplate', '<tpl><a href="?variant={chromosome}:{start}:{reference:htmlEncode}:{alternate:htmlEncode}&species=' + e.values.species + '" target="_blank"><img class="eva-grid-img-active" src="img/eva_logo.png"/></a>&nbsp;<span  style="opacity:0.2" class="eva-grid-img-inactive ">dbSNP</span></tpl>');
                     }
 
                     Ext.getCmp('variant-grid-view-column').tpl = updateTpl;
@@ -478,10 +478,23 @@ EvaVariantWidgetPanel.prototype = {
             params: {species: species},
             success: function (response) {
                 try {
-                    studies = response.response[0].result;
+                    var _tempStudies = response.response[0].result;
+                    _.each(_.keys(_tempStudies), function (key) {
+
+                        if(_.indexOf(DISABLE_STUDY_LINK, this[key].studyId) > -1){
+                            this[key].link = false;
+                        }else{
+                            this[key].link = true;
+                        }
+                        studies.push(this[key])
+
+                    },_tempStudies);
+
                 } catch (e) {
                     console.log(e);
                 }
+
+                _this.variantWidget.studies = studies;
                 filter.studiesStore.loadRawData(studies);
 
                 if (_.isEmpty(_this.selectStudies)) {

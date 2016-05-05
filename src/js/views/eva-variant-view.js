@@ -39,19 +39,35 @@ EvaVariantView.prototype = {
 
         this.targetDiv.innerHTML = _this._variantViewlayout();
         variantID = this.position;
+        _this.studiesList = [];
 
         EvaManager.get({
             category: 'meta/studies',
             resource: 'list',
             params: {species: this.species},
+            async: false,
             success: function (response) {
                 try {
-                    projects = response.response[0].result;
+
+                    console.log(response)
+                    var _tempStudies = response.response[0].result;
+                    _.each(_.keys(_tempStudies), function (key) {
+
+                        if(_.indexOf(DISABLE_STUDY_LINK, this[key].studyId) > -1){
+                            this[key].link = false;
+                        }else{
+                            this[key].link = true;
+                        }
+                        _this.studiesList.push(this[key])
+
+                    },_tempStudies);
+
                 } catch (e) {
                     console.log(e);
                 }
             }
         });
+
 
         EvaManager.get({
             category: 'variants',
@@ -115,8 +131,9 @@ EvaVariantView.prototype = {
             )
         });
 
+
         if (variant[0].sourceEntries) {
-            variantStatsPanel.load(variant[0].sourceEntries, {species: this.species});
+            variantStatsPanel.load(variant[0].sourceEntries, {species: this.species},  _this.studiesList);
         }
         variantStatsPanel.draw();
 
@@ -125,6 +142,13 @@ EvaVariantView.prototype = {
 
     draw: function (data, content) {
         var _this = this;
+        if(_.isEmpty(variant)){
+            var noDataEl = document.querySelector("#summary-grid");
+            var noDataElDiv = document.createElement("div");
+            noDataElDiv.innerHTML = '<span>No Data Available</span>';
+            noDataEl.appendChild(noDataElDiv);
+            return;
+        }
         var variantViewDiv = document.querySelector("#variantView");
         $(variantViewDiv).addClass('show-div');
         var summaryContent = _this._renderSummaryData(variant);
@@ -154,7 +178,7 @@ EvaVariantView.prototype = {
 
     },
     _renderSummaryData: function (data) {
-        var _summaryTable = '<div class="row"><div class="col-md-8"><table class="table ocb-stats-table">'
+        var _summaryTable = '<h4 class="variant-view-h4"> Summary</h4><div class="row"><div class="col-md-8"><table class="table ocb-stats-table">'
         var variantInfoTitle = document.querySelector("#variantInfo").textContent = data[0].chromosome + ':' + data[0].start + ':' + data[0].reference + ':' + data[0].alternate + ' Info';
         var speciesName;
         if (!_.isEmpty(speciesList)) {
@@ -196,7 +220,7 @@ EvaVariantView.prototype = {
             return '<div style="margin-left:15px;">No Data Available</div>';
         }
 
-        var _consequenceTypeTable = '<div class="row"><div class="col-md-8"><table class="table ocb-stats-table">'
+        var _consequenceTypeTable = '<h4 class="variant-view-h4"> Consequence Type</h4><div class="row"><div class="col-md-8"><table class="table ocb-stats-table">'
         _consequenceTypeTable += '<tr><th>Ensembl Gene ID</th><th>Ensembl Transcript ID</th><th>Accession</th><th>Name</th></tr>'
         _.each(_.keys(annotation), function (key) {
             var annotationDetails = this[key];
@@ -250,7 +274,6 @@ EvaVariantView.prototype = {
     },
     _createPopulationStatsPanel: function (target, data) {
         var _this = this;
-        console.log(data)
         this.defaultToolConfig = {
             headerConfig: {
                 baseCls: 'eva-header-2'
@@ -266,7 +289,8 @@ EvaVariantView.prototype = {
             height: 800
 
         });
-        variantPopulationStatsPanel.load(data.sourceEntries, {species: data.species});
+
+        variantPopulationStatsPanel.load(data.sourceEntries, {species: data.species},  _this.studiesList);
         variantPopulationStatsPanel.draw();
 
         if (data.species != 'hsapiens_grch37') {
@@ -295,13 +319,13 @@ EvaVariantView.prototype = {
             '<div id="variant-view-scrollable-div" class="col-sm-10 col-md-10 col-lg-10">' +
             '<div id="summary" class="row">' +
             '<div class="col-md-10" style="margin-left:10px;">' +
-            '<h4 class="variant-view-h4"> Summary</h4>' +
+            // '<h4 class="variant-view-h4"> Summary</h4>' +
             '<div id="summary-grid"></div>' +
             '</div>' +
             '</div>' +
             '<div  id="consequenceTypes" class="row">' +
             '<div class="col-md-10" style="margin-left:10px;">' +
-            '<h4 class="variant-view-h4"> Consequence Type</h4>' +
+            // '<h4 class="variant-view-h4"> Consequence Type</h4>' +
             '<div id="consequence-types-grid"></div>' +
             '</div>' +
             '</div>' +

@@ -65,13 +65,13 @@ StudyFilterFormPanel.prototype = {
     _createPanel: function () {
         var _this = this;
 
-        Ext.define('Tree Model', {
+        Ext.define(this.id+'-tree-model', {
             extend: 'Ext.data.Model',
             fields: this.fields
         });
 
         this.store = Ext.create('Ext.data.TreeStore', {
-            model: 'Tree Model',
+            model: this.id + '-tree-model',
             proxy: {
                 type: 'memory',
                 data: [],
@@ -88,7 +88,7 @@ StudyFilterFormPanel.prototype = {
             rootVisible: true,
             store: this.store,
             multiSelect: true,
-            singleExpand: true,
+            singleExpand: false,
             hideHeaders: true,
             collapsible: this.collapsible,
             titleCollapse: this.titleCollapse,
@@ -96,19 +96,20 @@ StudyFilterFormPanel.prototype = {
             header: this.headerConfig,
             columns: this.columns,
             listeners: {
-                'checkchange': function (node, checked) {
+                'checkchange': function (node) {
                     node.cascadeBy(function (n) {
-                        n.set('checked', checked);
+                        // n.set('checked', checked);
+                        _this.panel.getView().refreshNode(n);
                     });
                 }
             }
         });
 
-        if (!_.isEmpty(_this.defaultValues)) {
-            var values = _this.defaultValues.split(",");
-            console.log(values)
-            _this.selectNodes(values);
-        }
+        // if (!_.isEmpty(_this.defaultValues)) {
+        //     var values = _this.defaultValues.split(",");
+        //     console.log(values)
+        //     _this.selectNodes(values);
+        // }
 
         return  this.panel;
 

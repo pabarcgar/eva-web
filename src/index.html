@@ -8,16 +8,14 @@
 <meta charset="utf-8">
 
 <!-- build:style vendor -->
-<link type="text/css" rel="stylesheet" href="../vendor/ext-5.1.0/theme/theme-ebi-embl-all.css"/>
+<link type="text/css" rel="stylesheet" href="../vendor/ext-6.0.1/theme/theme-ebi-embl-all.css"/>
 <!--<link type="text/css" rel="stylesheet" href="../lib/jsorolla/vendor/jquery.qtip.min.css"/>-->
-<link rel="stylesheet" href="../vendor/bootstrap-3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
 <!--<link rel="stylesheet" href="../lib/jsorolla/vendor/font-awesome/css/font-awesome.min.css">-->
 <link rel="stylesheet" href="css/ebi-complaince/ebi-fluid-embl.css">
 <!-- /build -->
-
-
 <!-- build:style css -->
-<link type="text/css" rel="stylesheet" href="../lib/jsorolla/styles/css/style.css"/>
+<!--<link type="text/css" rel="stylesheet" href="../lib/jsorolla/styles/css/style.css"/>-->
 <link type="text/css" rel="stylesheet" href="css/eva.css"/>
 <!-- /build -->
 
@@ -120,7 +118,7 @@
                         <div><p> We will be adding new features to the EVA on a regular basis, and welcome <a href="mailto:eva-helpdesk@ebi.ac.uk" target="_top">your comments and feedback</a>. </p></div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-xs-12 col-sm-12 col-md-6">
                         <h3><span class="icon icon-generic" data-icon="N"></span>News</h3>
                         <div id="twitter-widget"></div>
                     </div>
@@ -128,12 +126,12 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
                         <h3><span class="icon icon-generic" data-icon="g"></span>Statistics</h3>
                         <div><h4>Short Genetic Variants (&lt;50bp)</h4><div id="eva-statistics"></div></div>
                     </div>
-                    <div class="col-md-6">
-                        <div style="margin-top:5px;"><br /><br /><h4>Structural Variants (&gt;50bp)</h4><div id="dgva-statistics"></div></div>
+                    <div class="col-xs-6  col-sm-6 col-md-6">
+                        <div><br /><br /><h4>Structural Variants (&gt;50bp)</h4><div id="dgva-statistics"></div></div>
                     </div>
 
                 </div>
@@ -418,7 +416,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title study-browser-panel">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"> What is the European Variation Archive (EVA)? <i class="indicator glyphicon glyphicon-chevron-down  pull-right"></i></a>
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"> What is the European Variation Archive (EVA)? <i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
                             </h3>
                         </div>
                         <div id="collapseOne" class="panel-collapse collapse in">
@@ -432,7 +430,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title study-browser-panel">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"> Is my data suitable for submission to the EVA?  <i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"> Is my data suitable for submission to the EVA?  <i class="indicator glyphicon glyphicon-chevron-down pull-right"></i></a>
                             </h3>
                         </div>
                         <div id="collapseTwo" class="panel-collapse collapse">
@@ -450,7 +448,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title study-browser-panel">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Why submit data to the EVA?  <i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Why submit data to the EVA?  <i class="indicator glyphicon glyphicon-chevron-down pull-right"></i></a>
                             </h3>
                         </div>
                         <div id="collapseThree" class="panel-collapse collapse">
@@ -463,7 +461,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title study-browser-panel">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">What happens to my data once submitted?  <i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">What happens to my data once submitted?  <i class="indicator glyphicon glyphicon-chevron-down  pull-right"></i></a>
                             </h3>
                         </div>
                         <div id="collapseFour" class="panel-collapse collapse">
@@ -477,7 +475,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title study-browser-panel">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive">What are the EVA normalisation and variant processing steps?  <i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive">What are the EVA normalisation and variant processing steps?  <i class="indicator glyphicon glyphicon-chevron-down pull-right"></i></a>
                             </h3>
                         </div>
                         <div id="collapseFive" class="panel-collapse collapse">
@@ -533,7 +531,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title study-browser-panel">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix">What data is shown in the EVA Clinical Browser? <i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix">What data is shown in the EVA Clinical Browser? <i class="indicator glyphicon glyphicon-chevron-down pull-right"></i></a>
                             </h3>
                         </div>
                         <div id="collapseSix" class="panel-collapse collapse">
@@ -548,7 +546,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title study-browser-panel">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeven">With whom does the EVA collaborate?  <i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeven">With whom does the EVA collaborate?  <i class="indicator glyphicon glyphicon-chevron-down pull-right"></i></a>
                             </h3>
                         </div>
                         <div id="collapseSeven" class="panel-collapse collapse">
@@ -572,12 +570,15 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title study-browser-panel">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseEight">Which browsers does the EVA website support? <i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i></a>
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseEight">Which browsers does the EVA website support? <i class="indicator glyphicon glyphicon-chevron-down pull-right"></i></a>
                             </h3>
                         </div>
                         <div id="collapseEight" class="panel-collapse collapse">
                             <div class="panel-body">
-                                <p>The EVA website employs HTML5 technologies and standards. Chrome (version 18 or higher), Firefox (version 12 or higher), Safari (version 6 or higher) , Opera (version 12 or higher) and Internet Explorer (version 10 or higher) are fully supported, however older versions of these browsers may give rise to errors.</p>
+                                <p>
+                                    The EVA website employs HTML5 technologies and standards. Chrome (version 18 or higher), Firefox (version 12 or higher), Safari (version 6 or higher) , Opera (version 12 or higher) and Internet Explorer (version 10 or higher) are fully supported, however older versions of these browsers may give rise to errors.<br />
+                                    The EVA website also supports mobile versions of web browsers, with limited functionality. Please report all errors to the <a href="mailto:eva-helpdesk@ebi.ac.uk" target="_top">EVA helpdesk</a>.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -637,26 +638,24 @@
     <script type="text/javascript" src="js/browser-detect.js"></script>
     <!-- /build -->
     <!-- build:script vendor -->
-    <script type="text/javascript" src="../vendor/ext-5.1.0/js/ext-all.js"></script>
-    <script type="text/javascript" src="../lib/jsorolla/vendor/underscore-min.js"></script>
-    <script type="text/javascript" src="../lib/jsorolla/vendor/backbone-min.js"></script>
-    <script type="text/javascript" src="../lib/jsorolla/vendor/jquery.min.js"></script>
+    <script type="text/javascript" src="../vendor/ext-6.0.1/js/ext-all.js"></script>
+    <script type="text/javascript" src="../bower_components/underscore/underscore.js"></script>
+    <script type="text/javascript" src="../bower_components/backbone/backbone.js"></script>
+    <script type="text/javascript" src="../bower_components/jQuery/dist/jquery.js"></script>
     <!-- These dependencies must go AFTER jquery -->
     <!--<script type="text/javascript" src="../lib/jsorolla/vendor/bootstrap-scoped-dist/js/bootstrap.min.js"></script>-->
-    <script type="text/javascript" src="../vendor/highcharts-4.0.3/js/highcharts.js"></script>
-    <script type="text/javascript" src="../vendor/bootstrap-3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../bower_components/highcharts-release/highcharts.src.js"></script>
+    <script type="text/javascript" src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <!--<script type="text/javascript" src="../lib/jsorolla/vendor/jquery.cookie.js"></script>-->
     <!--<script type="text/javascript" src="../lib/jsorolla/vendor/jquery.sha1.js"></script>-->
     <!--<script type="text/javascript" src="../lib/jsorolla/vendor/purl.min.js"></script>-->
     <!--<script type="text/javascript" src="../lib/jsorolla/vendor/jquery.qtip.min.js"></script>-->
-    <script type="text/javascript" src="../vendor/linqJS/linq.min.js"></script>
-    <!-- /build -->
-    <!-- build:script vkbeautify -->
-    <script type="text/javascript" src="../vendor/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
+    <script type="text/javascript" src="../bower_components/linqjs/linq.min.js"></script>
+    <!--<script type="text/javascript" src="../bower_components/vkbeautify/vkbeautify.js"></script>-->
     <!-- /build -->
     <!-- build:script lib -->
     <script type="text/javascript" src="../lib/jsorolla/build/1.1.9/genome-viewer/genome-viewer.js"></script>
-    <script type="text/javascript" src="../lib/jsorolla/build/1.1.9/genome-viewer/gv-config.js"></script>
+    <!--<script type="text/javascript" src="../lib/jsorolla/build/1.1.9/genome-viewer/gv-config.js"></script>-->
     <!-- /build -->
     <!-- build:script eva-js -->
     <script type="text/javascript" src="js/eva-manager.js"></script>
