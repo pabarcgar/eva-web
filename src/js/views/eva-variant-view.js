@@ -29,7 +29,7 @@ function EvaVariantView(args) {
 }
 EvaVariantView.prototype = {
     render: function () {
-        var _this = this
+        var _this = this;
 
         this.targetDiv = (this.target instanceof HTMLElement) ? this.target : document.querySelector('#' + this.target);
         if (!this.targetDiv) {
@@ -48,8 +48,6 @@ EvaVariantView.prototype = {
             async: false,
             success: function (response) {
                 try {
-
-                    console.log(response)
                     var _tempStudies = response.response[0].result;
                     _.each(_.keys(_tempStudies), function (key) {
 
@@ -93,6 +91,9 @@ EvaVariantView.prototype = {
         $(document).ready(function () {
             $('body').scrollspy({ 'target': '#variantViewScrollspy', 'offset': 250 });
         });
+
+        //sending tracking data to Google Analytics
+        ga('send', 'event', { eventCategory: 'Views', eventAction: 'Variant', eventLabel:'species='+this.species+'variant='+this.position});
     },
     createVariantStatsPanel: function (data) {
         var _this = this;
@@ -214,10 +215,11 @@ EvaVariantView.prototype = {
 
     },
     _renderConsequenceTypeData: function (data) {
-        var annotation = data[0].annotation.consequenceTypes.sort(this._sortBy('ensemblGeneId', this._sortBy('ensemblTranscriptId')));
+        var annotation = data[0].annotation.consequenceTypes;
         if (!annotation) {
-            return '<div style="margin-left:15px;">No Data Available</div>';
+            return '<h4 class="variant-view-h4"> Consequence Type</h4><div style="margin-left:15px;">No Data Available</div>';
         }
+        annotation = data[0].annotation.consequenceTypes.sort(this._sortBy('ensemblGeneId', this._sortBy('ensemblTranscriptId')));
         var _consequenceTypeTable = '<h4 class="variant-view-h4"> Consequence Type</h4><div class="row"><div class="col-md-10"><table class="table ocb-stats-table">'
         _consequenceTypeTable += '<tr><th>Ensembl Gene ID</th><th>Ensembl Transcript ID</th><th>Accession</th><th>Name</th></tr>'
         _.each(_.keys(annotation), function (key) {

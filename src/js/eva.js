@@ -62,9 +62,9 @@ Eva.prototype = {
         $(this.aboutDiv).addClass('eva-child');
         this.childDivMenuMap['About'] = this.aboutDiv;
 
-        /* Contact */
-        $(this.contactDiv).addClass('eva-child');
-        this.childDivMenuMap['Contact'] = this.contactDiv;
+        /* Feedback */
+        $(this.feedbackDiv).addClass('eva-child');
+        this.childDivMenuMap['Feedback'] = this.feedbackDiv;
 
         /* api */
         $(this.apiDiv).addClass('eva-child');
@@ -99,19 +99,12 @@ Eva.prototype = {
         $(this.clinicalDiv).addClass('eva-child');
         this.childDivMenuMap['Clinical Browser'] = this.clinicalDiv;
 
-        /* submision-start */
-        $(this.submissionForm).addClass('eva-child');
-        this.childDivMenuMap['submission-start'] = this.submissionForm;
-
-        /* iobioView */
-        $(this.iobioView).addClass('eva-child');
-        this.childDivMenuMap['eva-iobio'] = this.iobioView;
-
         /* FAQ */
-        $(this.iobioView).addClass('eva-child');
+        $(this.faqDiv).addClass('eva-child');
         this.childDivMenuMap['FAQ'] = this.faqDiv;
+
     },
-    draw: function () {
+    draw: function (option) {
         this.targetDiv = (this.target instanceof HTMLElement ) ? this.target : document.querySelector('#' + this.target);
         if (this.targetDiv === 'undefined') {
             console.log('target not found');
@@ -121,15 +114,19 @@ Eva.prototype = {
         this.evaMenu.draw();
         this.contentDiv = document.querySelector('#content');
 
-//        this.select('Home');
+        this._selectHandler(option, false);
+        $("a:contains('" + option + "')").parent('li').addClass('active');
 
     },
     select: function (option) {
-        this.evaMenu.select(option);
-        this._selectHandler(option);
+        // this.evaMenu.select(option);
+        this._selectHandler(option, true);
     },
-    _selectHandler: function (option) {
+    _selectHandler: function (option, update) {
+        update = update || 0;
         var _this = this;
+
+       
         if (this.studyBrowserPanel) {
             this.studyBrowserPanel.hide();
         }
@@ -162,7 +159,9 @@ Eva.prototype = {
         }
 
         //<!---- Updating URL on Tab change ---->
-        this.pushURL(option);
+        if(update){
+            this.pushURL(option);
+        }
 
         switch (option) {
             case 'Home':
@@ -175,7 +174,7 @@ Eva.prototype = {
                 } else {
                     this.studyBrowserPanel = this._createStudyBrowserPanel(this.contentDiv);
                     // this.select('Study Browser');
-                    this.pushURL(option, false);
+                    // this.pushURL(option, false);
                 }
                 break;
             case 'Variant Browser':
@@ -185,7 +184,7 @@ Eva.prototype = {
                     this.variantWidgetPanel = this._createVariantWidgetPanel(this.contentDiv);
                     // this.select('Variant Browser');
                     this.variantWidgetPanel.panel.updateLayout();
-                    this.pushURL(option, true);
+                    // this.pushURL(option, true);
                 }
                 break;
             case 'Genome Browser':
@@ -195,7 +194,7 @@ Eva.prototype = {
                     this.contentDiv.className += ' eva variant-widget-panel ocb-variant-stats-panel';
                     this.genomeViewerPanel = this._createGenomeViewerPanel(this.contentDiv);
                 }
-                this.pushURL(option, true);
+                // this.pushURL(option, true);
                 break;
             case 'GA4GH':
                 if (this.beaconPanel) {
@@ -212,7 +211,7 @@ Eva.prototype = {
                     // this.select('Clinical Browser');
                     this.clinicalWidgetPanel.panel.updateLayout();
                     this.clinicalWidgetPanel.formPanelClinvarFilter.trigger('submit', {values: this.clinicalWidgetPanel.formPanelClinvarFilter.getValues(), sender: _this});
-                    this.pushURL(option, false);
+                    // this.pushURL(option, false);
                 }
             case 'dgva-study':
                 this._getPublications();
@@ -220,7 +219,15 @@ Eva.prototype = {
             case 'eva-study':
                 this._getPublications();
                 break;
+
         }
+
+      if (option) {
+          ga('set', 'page', option);
+          ga('send', 'pageview');
+      }
+
+
     },
     _createEvaMenu: function (target) {
         var _this = this;
@@ -228,7 +235,7 @@ Eva.prototype = {
             target: target,
             handlers: {
                 'menu:click': function (e) {
-                    _this._selectHandler(e.option);
+                    _this._selectHandler(e.option, true);
                 }
             }
         });
@@ -240,6 +247,7 @@ Eva.prototype = {
         var species = '';
         var type = '';
         var search = '';
+        var pushURL = true;
 
         if (!_.isEmpty($.urlParam('studySpecies'))) {
             species = decodeURIComponent($.urlParam('studySpecies'))
@@ -257,12 +265,18 @@ Eva.prototype = {
             search = decodeURIComponent($.urlParam('search'))
         }
 
+        var tab = getUrlParameters('');
+        if(tab && decodeURI(tab.id) == 'Study Browser') {
+            pushURL = false;
+        }
+
         var studyBrowser = new EvaStudyBrowserWidgetPanel({
             target: target,
             species: species,
             type: type,
             browserType: browserType,
-            search: search
+            search: search,
+            pushURL:pushURL
         });
         studyBrowser.draw();
         return studyBrowser;
@@ -280,6 +294,7 @@ Eva.prototype = {
         var polyphen = '';
         var sift = '';
         var maf = '';
+        var pushURL = true;
 
         if (!_.isEmpty($.urlParam('region'))) {
             region = decodeURIComponent($.urlParam('region'))
@@ -325,6 +340,11 @@ Eva.prototype = {
             maf = _maf;
         }
 
+        var tab = getUrlParameters('');
+        if(tab && decodeURI(tab.id) == 'Variant Browser') {
+            pushURL = false;
+        }
+
         var variantWidget = new EvaVariantWidgetPanel({
             target: target,
             region: region,
@@ -336,7 +356,8 @@ Eva.prototype = {
             selectAnnotCT: annotCT,
             polyphen: polyphen,
             sift: sift,
-            maf: maf
+            maf: maf,
+            pushURL:pushURL
         });
         variantWidget.draw();
         return variantWidget;
@@ -370,9 +391,10 @@ Eva.prototype = {
         var type = '';
         var significance = '';
         var review = '';
+        var pushURL = true;
 
         if (!_.isEmpty($.urlParam('clinvarRegion'))) {
-            clinvarRegion = decodeURIComponent($.urlParam('clinvarRegion'))
+            clinvarRegion = decodeURIComponent($.urlParam('clinvarRegion'));
         }
 
         if (!_.isEmpty($.urlParam('clinvarSelectFilter'))) {
@@ -407,6 +429,11 @@ Eva.prototype = {
             review = decodeURIComponent($.urlParam('review'))
         }
 
+        var tab = getUrlParameters('');
+        if(tab && decodeURI(tab.id) == 'Clinical Browser') {
+            pushURL = false;
+        }
+
         var evaClinicalWidgetPanel = new EvaClinicalWidgetPanel({
             target: target,
             filter: filter,
@@ -417,7 +444,8 @@ Eva.prototype = {
             phenotype: phenotype,
             type: type,
             significance: significance,
-            review: review
+            review: review,
+            pushURL:pushURL
         });
         evaClinicalWidgetPanel.draw();
         return evaClinicalWidgetPanel;
@@ -427,22 +455,13 @@ Eva.prototype = {
         replace = replace || 0;
         if (replace) {
             var replaceURL = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + option;
-            window.history.pushState({path: replaceURL}, '', replaceURL);
+            window.history.pushState({path: option}, '', replaceURL);
         } else {
-            var pageArray = ['eva-study', 'dgva-study', 'variant', 'gene', 'eva-iobio'];
+            var pageArray = ['eva-study', 'dgva-study', 'variant', 'gene', 'Variant Browser', 'Clinical Browser', 'Study Browser'];
             if (_.indexOf(pageArray, option) < 0 && !_.isEmpty(option)) {
                 var optionValue = option;
-                var tabArray = ['Genome Browser', 'Variant Browser', 'Clinical Browser', 'Study Browser'];
-                if (_.indexOf(tabArray, option) >= 0) {
-                    var hash = document.URL.substring(document.URL.indexOf('?') + 1);
-                    if (!_.isUndefined(hash.split("&")[1])) {
-                        optionValue = hash;
-                    } else {
-                        optionValue = option;
-                    }
-                }
                 var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + optionValue;
-                window.history.pushState({path: newurl}, '', newurl);
+                history.pushState('forward', '', newurl);
                 $("a:contains('" + option + "')").parent('li').addClass('active');
             }
         }

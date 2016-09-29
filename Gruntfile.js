@@ -13,7 +13,7 @@ module.exports = function (grunt) {
         // Metadata.
         meta: {
             version: {
-                eva: '2.1.0'
+                eva: '2.1.1'
             }
         },
 
@@ -44,7 +44,6 @@ module.exports = function (grunt) {
                     'src/js/variant-widget/eva-variant-stats-panel.js',
                     'src/js/variant-widget/eva-variant-genotype-grid-panel.js',
                     'src/js/variant-widget/eva-variant-population-stats-panel.js',
-                    'src/js/variant-widget/eva-genome-viewer-panel.js',
                     'src/js/variant-widget/filters/eva-form-panel.js',
                     'src/js/variant-widget/filters/eva-species-filter-form-panel.js',
                     'src/js/variant-widget/filters/eva-study-filter-form-panel.js',
@@ -61,7 +60,6 @@ module.exports = function (grunt) {
                     'src/js/views/eva-study-view.js',
                     'src/js/views/eva-variant-view.js',
                     'src/js/views/eva-gene-view.js',
-                    'src/js/views/eva-iobio-view.js',
                     'src/js/statistics/eva-statistics.js',
                     'src/js/statistics/dgva-statistics.js',
                     'src/js/beacon-form/eva-beacon-panel.js',
@@ -85,7 +83,6 @@ module.exports = function (grunt) {
             ebi_web_guidelines_js: {
                 src: [
                     'src/js/ebi-web-guidelines/modernizr.custom.49274.js',
-                    'src/js/ebi-web-guidelines/google-analytics.js',
                     'src/js/ebi-web-guidelines/cookiebanner.js',
                     'src/js/ebi-web-guidelines/foot.js'
                 ],
@@ -99,7 +96,8 @@ module.exports = function (grunt) {
                     './bower_components/backbone/backbone.js',
                     './bower_components/highcharts-release/highcharts.js',
                     './bower_components/linqjs/linq.js',
-                    './bower_components/vkbeautify/vkbeautify.js'
+                    './bower_components/vkbeautify/vkbeautify.js',
+                    './bower_components/autotrack/autotrack.js'
                 ],
                 dest: 'build/<%= meta.version.eva %>/vendor/vendors.js'
             }
@@ -288,6 +286,6 @@ module.exports = function (grunt) {
     grunt.registerTask('bower-install', ['bower:install']);
 
     // Default task.
-    grunt.registerTask('default', ['hub:genomeViewer','clean:eva','concat','uglify', 'copy:eva','cssmin', 'htmlbuild:eva', 'minifyHtml', 'imagemin', 'exec']);
+    grunt.registerTask('default', ['bower-install','hub:genomeViewer','clean:eva','concat','uglify', 'copy:eva','cssmin', 'htmlbuild:eva', 'minifyHtml', 'imagemin', 'exec']);
 
 };

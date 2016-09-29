@@ -68,10 +68,10 @@ EvaVariantWidgetPanel.prototype = {
         var _this = this;
         this.panel.show();
         _this.resize();
-        var variantQuery = _this.queryParams;
-        if (!_.isUndefined(variantQuery)) {
-            _this._updateURL(variantQuery);
-        }
+        // var variantQuery = _this.queryParams;
+        // if (!_.isUndefined(variantQuery)) {
+        //     _this._updateURL(variantQuery);
+        // }
     },
     hide: function () {
         this.panel.hide();
@@ -97,7 +97,7 @@ EvaVariantWidgetPanel.prototype = {
             if (_this.variantWidget.toolTabPanel.getActiveTab().title == 'Genomic Context') {
                 _this.variantWidget.resizeGV();
             }
-            _this.variantWidget.variantBrowserGrid.trigger("variant:change", {sender: _this, args: row[0].data});
+            // _this.variantWidget.variantBrowserGrid.trigger("variant:change", {sender: _this, args: row[0].data});
         }
     },
 
@@ -257,6 +257,8 @@ EvaVariantWidgetPanel.prototype = {
                 _this.formPanelVariantFilter.panel.getForm().findField('region').setValue('supercont1.18:165624-165624');
             }else if (e.species == 'ggallus_galgal4') {
                _this.formPanelVariantFilter.panel.getForm().findField('region').setValue('1:2100000-2500000');
+            }else if (e.species == 'aquadriannulatus_quad4av1') {
+               _this.formPanelVariantFilter.panel.getForm().findField('region').setValue('KB665398:1-200000');
             } else {
                 _this.formPanelVariantFilter.panel.getForm().findField('region').setValue('1:3000000-3100000');
             }
@@ -389,21 +391,7 @@ EvaVariantWidgetPanel.prototype = {
 
                     if (!_.isEmpty(e.values.studies)) {
                         e.values.studies = e.values.studies.join(',');
-                    }
-
-                    var limitExceeds = false;
-                    _.each(regions, function (region) {
-                        var start = region.split(':')[1].split('-')[0];
-                        var end = region.split(':')[1].split('-')[1]
-                        if (end - start > 1000000) {
-                            Ext.Msg.alert('Limit Exceeds', 'Please enter the region no more than 1000000 range');
-                            limitExceeds = true;
-                        } else if (end - start < 0) {
-                            Ext.Msg.alert('Incorrect Range', 'Please enter the correct range.The start of the region should be smaller than the end');
-                        } else if (isNaN(start) || isNaN(end)) {
-                            Ext.Msg.alert('Incorrect Value', 'Please enter a numeric value');
-                        }
-                    });
+                    }                   
 
                     if (!_.isEmpty(e.values["annot-ct"])) {
                         e.values["annot-ct"] = e.values["annot-ct"].join(',');
@@ -416,35 +404,17 @@ EvaVariantWidgetPanel.prototype = {
                     delete values['selectFilter'];
                     delete values['gene'];
 
-                    if (!limitExceeds) {
-                        _this.variantWidget.retrieveData(url,values)
+                    if (_this.formPanelVariantFilter.validatePositionFilter(regions)) {
+                        _this.variantWidget.retrieveData(url,values);
+                        _this.variantWidget.values = e.values;
+                        _this['queryParams'] = e.values;
+                        if(_this.pushURL){
+                            _this._updateURL(e.values);
+                        }
                     } else {
-                        _this.variantWidget.retrieveData('', '')
+                        _this.variantWidget.retrieveData('', '');
                     }
 
-                    _this.variantWidget.values = e.values;
-                    _this['queryParams'] = e.values;
-                    _this._updateURL(e.values);
-
-                    var speciesArray = ['hsapiens', 'hsapiens_grch37', 'mmusculus_grcm38'];
-                    var updateTpl;
-                    if (e.values.species && speciesArray.indexOf(e.values.species) > -1) {
-//                        var ensemblSepciesName = _.findWhere(speciesList, {taxonomyCode: e.values.species.split('_')[0]}).taxonomyScientificName;
-//                        ensemblSepciesName = ensemblSepciesName.split(' ')[0] + '_' + ensemblSepciesName.split(' ')[1];
-//                        var ensemblURL = 'http://www.ensembl.org/' + ensemblSepciesName + '/Variation/Explore?vdb=variation;v={id}';
-//                        if (e.values.species == 'hsapiens_grch37') {
-//                            ensemblURL = 'http://grch37.ensembl.org/' + ensemblSepciesName + '/Variation/Explore?vdb=variation;v={id}';
-//                        }
-                        var ncbiURL = 'http://www.ncbi.nlm.nih.gov/SNP/snp_ref.cgi?rs={id}';
-                        updateTpl = Ext.create('Ext.XTemplate', '<tpl if="id"><a href="?variant={chromosome}:{start}:{reference:htmlEncode}:{alternate:htmlEncode}&species=' + e.values.species + '" target="_blank"><img class="eva-grid-img-active" src="img/eva_logo.png"/></a>' +
-//                            '<a href="' + ensemblURL + '" target="_blank"><img alt="" src="http://static.ensembl.org/i/search/ensembl.gif"></a>' +
-                            '&nbsp;<a href="' + ncbiURL + '" target="_blank"><span>dbSNP</span></a>' +
-                            '<tpl else><a href="?variant={chromosome}:{start}:{reference:htmlEncode}:{alternate:htmlEncode}&species=' + e.values.species + '" target="_blank"><img class="eva-grid-img-active" src="img/eva_logo.png"/></a>&nbsp;<span  style="opacity:0.2" class="eva-grid-img-inactive ">dbSNP</span></tpl>');
-                    } else {
-                        updateTpl = Ext.create('Ext.XTemplate', '<tpl><a href="?variant={chromosome}:{start}:{reference:htmlEncode}:{alternate:htmlEncode}&species=' + e.values.species + '" target="_blank"><img class="eva-grid-img-active" src="img/eva_logo.png"/></a>&nbsp;<span  style="opacity:0.2" class="eva-grid-img-inactive ">dbSNP</span></tpl>');
-                    }
-
-                    Ext.getCmp('variant-grid-view-column').tpl = updateTpl;
                 }
             }
         });
@@ -501,7 +471,6 @@ EvaVariantWidgetPanel.prototype = {
                     //set all records checked default
                     _this.formPanelVariantFilter.filters[5].grid.getSelectionModel().selectAll()
                 } else {
-                    console.log(_this.selectStudies)
                     var studyArray = _this.selectStudies.split(",");
                     var items = _this.formPanelVariantFilter.filters[5].grid.getSelectionModel().store.data.items;
                     var selectStudies = [];
@@ -519,9 +488,16 @@ EvaVariantWidgetPanel.prototype = {
         });
     },
     _updateURL: function (values) {
+
         var _this = this;
         var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + 'Variant Browser&' + $.param(values);
-        window.history.pushState({path: newurl}, '', newurl);
+        history.pushState ('forward', '', newurl);
+        //sending tracking data to Google Analytics
+        var gaValues = $.param(values).split("&");
+        _.each(_.keys(gaValues), function (key) {
+            ga('send', 'event', { eventCategory: 'Variant Browser', eventAction: 'Search', eventLabel:decodeURIComponent(this[key])});
+        }, gaValues);
+
     }
 
 

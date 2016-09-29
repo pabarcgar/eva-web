@@ -31,7 +31,7 @@ EvaStudyView.prototype = {
     render: function () {
         var _this = this;
         var params = {};
-
+        
         if (this.type === 'dgva') {
             var params = {structural: 'true'};
         }
@@ -66,9 +66,18 @@ EvaStudyView.prototype = {
                     }
                 }
             });
+
+            var speciesCode;
+            var filesParams;
+
             if (!_.isUndefined(_.findWhere(studySpeciesList, {taxonomyScientificName: summary[0].speciesScientificName}))) {
-                var speciesCode = _.findWhere(studySpeciesList, {taxonomyScientificName: summary[0].speciesScientificName}).taxonomyCode + '_' + _.findWhere(studySpeciesList, {taxonomyScientificName: summary[0].speciesScientificName}).assemblyCode
-                var filesParams = {species: speciesCode};
+                speciesCode = _.findWhere(studySpeciesList, {taxonomyScientificName: summary[0].speciesScientificName}).taxonomyCode + '_' + _.findWhere(studySpeciesList, {taxonomyScientificName: summary[0].speciesScientificName}).assemblyCode;
+                filesParams = {species: speciesCode};
+            } else if (!_.isUndefined(_.findWhere(studySpeciesList, {taxonomyEvaName: summary[0].speciesCommonName.toLowerCase()}))) {
+                speciesCode = _.findWhere(studySpeciesList, {taxonomyEvaName: summary[0].speciesCommonName.toLowerCase()}).taxonomyCode + '_' + _.findWhere(studySpeciesList, {taxonomyEvaName: summary[0].speciesCommonName.toLowerCase()}).assemblyCode;
+                filesParams = {species: speciesCode};
+            } else {
+                return;
             }
 
             EvaManager.get({
@@ -87,7 +96,8 @@ EvaStudyView.prototype = {
                 }
             });
         }
-
+        //sending tracking data to Google Analytics
+        ga('send', 'event', { eventCategory: 'Views', eventAction: 'Study', eventLabel: this.projectId});
     },
     _draw: function (data, content) {
         var _this = this;
