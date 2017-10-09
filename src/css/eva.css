@@ -33,6 +33,7 @@ body {
 
 .eva a {
     cursor: pointer;
+    text-decoration: none;
 }
 
 .eva-grid-img-active {
@@ -715,4 +716,8 @@ html.fontface .icon-s2:before {
     .padding-bottom {
         padding-bottom: 2rem;
     }
+}
+
+.image-link {
+    border-bottom-style: none;
 }

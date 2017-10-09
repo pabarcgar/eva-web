@@ -153,7 +153,7 @@ EvaStudyView.prototype = {
 
             var projectURL = '-' ;
             var ena_link = '<a id="ena_link" href="http://www.ebi.ac.uk/ena/data/view/' + data.summaryData[0].id + '" target="_blank">Submitted Files</a>';
-            var eva_link = '<a id="eva_link" href="ftp://ftp.ebi.ac.uk/pub/databases/eva/' + data.summaryData[0].id + '" target="_blank">Curated Files</a>';
+            var eva_link = '<a id="eva_link" href="ftp://ftp.ebi.ac.uk/pub/databases/eva/' + data.summaryData[0].id + '" target="_blank">Browsable Files</a>';
             if (!_.isUndefined(_this._getProjectUrl(data.summaryData[0].id)) && _this._getProjectUrl(data.summaryData[0].id) != '-') {
                 projectURL = '<a href="' + _this._getProjectUrl(data.summaryData[0].id) + '" target="_blank">' + _this._getProjectUrl(data.summaryData[0].id) + '</a><br />';
             }
