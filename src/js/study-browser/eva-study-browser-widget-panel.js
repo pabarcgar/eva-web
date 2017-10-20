@@ -427,7 +427,6 @@ EvaStudyBrowserWidgetPanel.prototype = {
         params = _.omit(params, ['genome']);
         _this._updateColumns(params)
         EvaManager.get({
-            host:'http://ves-ebi-f8:8080/eva-812/webservices/rest/',
             category: 'meta/studies',
             resource: 'all',
             params: params,
