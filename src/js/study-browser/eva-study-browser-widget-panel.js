@@ -320,12 +320,16 @@ EvaStudyBrowserWidgetPanel.prototype = {
                 flex: 1.5
             },
             {
-                text: "Download",
+                text: "Browsable <br/>Files",
                 dataIndex: 'id',
                 flex: 1.5,
                 renderer: function (value, p, record) {
+                    var browsable_link = '<img style="opacity:0.2" class="eva-grid-img-inactive" src="img/eva_logo.png" width="20"/>';
+                    if(record.data.browsable){
+                        browsable_link = '<a href="ftp://ftp.ebi.ac.uk/pub/databases/eva/{0}" target="_blank" class="image-link"><img src="img/eva_logo.png" width="20"/></a>';
+                    }
                     return value ? Ext.String.format(
-                        '&nbsp;&nbsp;<a href="ftp://ftp.ebi.ac.uk/pub/databases/eva/{0}" target="_blank" class="image-link"><img src="img/eva_logo.png" width="20"/></a>',
+                        '&nbsp;&nbsp;'+browsable_link,
                         value,
                         record.data.threadid
                     ) : '';
