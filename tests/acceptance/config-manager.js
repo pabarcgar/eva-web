@@ -21,7 +21,7 @@
 
 var baseURL = '@@BASE_URL';
 var browser = process.env.BROWSER;
-var sleep_time = 5000;
+// var sleep_time = 5000;
 var waitTime = 60000;
 
 module.exports = {
@@ -59,7 +59,7 @@ module.exports = {
             chaiWebdriver = require('chai-webdriver');
     },
     sleep:function(driver){
-        driver.sleep(sleep_time);
+        // driver.sleep(sleep_time);
         return driver;
     },
     reset:function (driver){
